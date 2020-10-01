@@ -46,7 +46,6 @@ async function remove(taskId) {
 async function update(task) {
     const collection = await dbService.getCollection('task')
     task._id = ObjectId(task._id);
-
     try {
         await collection.replaceOne({ "_id": task._id }, task )
         return task
