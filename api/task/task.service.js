@@ -1,19 +1,22 @@
 
 const dbService = require('../../services/db.service')
 const ObjectId = require('mongodb').ObjectId
+const externalService = require('../../services/external.service')
 
 module.exports = {
     query,
     getById,
     remove,
     update,
-    add
+    add,
+    perform
 }
 
 async function query() {
     const collection = await dbService.getCollection('task')
     try {
         const tasks = await collection.find().toArray();
+        externalService.intervalExecute(tasks)
         return tasks
     } catch (err) {
         console.log('ERROR: cannot find tasks')
@@ -47,7 +50,7 @@ async function update(task) {
     const collection = await dbService.getCollection('task')
     task._id = ObjectId(task._id);
     try {
-        await collection.replaceOne({ "_id": task._id }, task )
+        await collection.replaceOne({ "_id": task._id }, task)
         return task
     } catch (err) {
         console.log(`ERROR: cannot update task ${task._id}`)
@@ -65,5 +68,15 @@ async function add(task) {
         throw err;
     }
 }
-
+async function perform(task) {
+    try {
+        await externalService.execute(task)
+    } catch (error) {
+        task.success = false;
+        task.lastTriedAt = new Date();
+    } finally {
+        task.triesCount++;
+        return task;
+    }
+}
 

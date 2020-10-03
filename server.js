@@ -1,12 +1,12 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-// const path = require('path')
+const path = require('path')
 const cookieParser = require('cookie-parser')
 
 const app = express()
 const http = require('http').createServer(app);
-// const io = require('socket.io')(http);
+const io = require('socket.io')(http);
 
 // Express App Config
 app.use(cookieParser())
@@ -24,12 +24,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const taskRoutes = require('./api/task/task.routes')
-// const connectSockets = require('./api/socket/socket.routes')
+const connectSockets = require('./api/socket/socket.routes')
 
 
 // routes
 app.use('/api/task', taskRoutes)
-// connectSockets(io)
+connectSockets(io)
 
 // Make every server-side-route to match the index.html
 // so when requesting http://localhost:3000/index.html/car/123 it will still respond with

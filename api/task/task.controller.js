@@ -5,7 +5,8 @@ module.exports = {
     getTasks,
     deleteTask,
     updateTask,
-    addTask
+    addTask,
+    performTask
 }
 
 async function getTask(req, res) {
@@ -32,6 +33,11 @@ async function updateTask(req, res) {
 async function addTask(req, res) {
     const task = req.body;
     await taskService.add(task)
+    res.send(task)
+}
+async function performTask(req, res) {
+    const task = req.body;
+    await taskService.perform(task)
     res.send(task)
 }
 
