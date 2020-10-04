@@ -11,7 +11,7 @@ const io = require('socket.io')(http);
 // Express App Config
 app.use(cookieParser())
 app.use(bodyParser.json());
-
+app.use(express.static('public'));
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve(__dirname, 'public')));
@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const taskRoutes = require('./api/task/task.routes')
-const connectSockets = require('./api/socket/socket.routes')
+const {connectSockets} = require('./api/socket/socket.routes')
 
 
 // routes

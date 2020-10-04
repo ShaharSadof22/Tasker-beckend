@@ -1,5 +1,6 @@
 const dbService = require('./db.service')
 const ObjectId = require('mongodb').ObjectId
+const { socketEmit } = require('../api/socket/socket.routes')
 
 const taskService = require('../api/task/task.service')
 
@@ -11,7 +12,6 @@ module.exports = {
 function execute(task) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            console.log('execute');
             if (Math.random() > 0.5) {
                 task.success = true;
                 task.doneAt = new Date();
@@ -34,11 +34,13 @@ function intervalExecute(tasks) {
                 } catch (error) {
                     task.success = false;
                     task.lastTriedAt = new Date();
+                    
                 } finally {
                     task.triesCount++;
                     try {
                         task._id = ObjectId(task._id);
                         await collection.replaceOne({ "_id": task._id }, task)
+                        socketEmit('send updated task', task)
                     } catch (error) {
                         console.log('ERROR: cannot update task')
                     }

@@ -1,7 +1,14 @@
 
-module.exports = connectSockets
+module.exports = {
+    connectSockets,
+    socketEmit
+}
+
+var socketIo;
 
 function connectSockets(io) {
+    socketIo = io;
+    
     io.on('connection', socket => {
         console.log('socket connection on');
 
@@ -21,4 +28,8 @@ function connectSockets(io) {
             io.to(socket.myTask).emit('send updated task', task)
         })
     })
+}
+
+function socketEmit(eventName, data = null) {
+    socketIo.emit(eventName, data)
 }
