@@ -6,4 +6,6 @@ Using Socket io, the page always stays updated with the data from the backend.
 
 This application builds on React on the front side and Node and MongoDB Atlas at the backend.
 
+Link for the frontend repo - https://github.com/ShaharSadof22/Tasker
+
 Try it now! - https://tasker-app2020.herokuapp.com/#/
